@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Requests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FabToolKit">
+      <HintPath>..\..\..\My Libraries\FabToolKit\FabToolKit\bin\Release\net8.0\publish\FabToolKit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
