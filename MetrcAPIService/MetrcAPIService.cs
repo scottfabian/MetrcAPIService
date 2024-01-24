@@ -28,6 +28,11 @@ public class MetrcAPIService : ApiServiceBase
                                 .AddFacilityLicense(facilityLicense)
                                 .GetAsync();
 
+        if (!response.IsSuccessStatusCode)
+        {
+            ThrowMetrcException(response);
+        }
+
         return ParseAndReturnDTO<ItemDTO>(response);
     }
 

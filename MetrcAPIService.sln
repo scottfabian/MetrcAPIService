@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetrcAPIService", "MetrcAPIService\MetrcAPIService.csproj", "{11163D1A-25B6-4683-A3A9-33481FBF55D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{98B80D58-9083-4AA4-812B-DB39381F7250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{98B80D58-9083-4AA4-812B-DB39381F7250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetrcApiService.IntegrationTests", "MetrcApiService.IntegrationTests\MetrcApiService.IntegrationTests.csproj", "{E544F8B0-F631-49B7-8EA4-037A0A977DA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{98B80D58-9083-4AA4-812B-DB39381F7250}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98B80D58-9083-4AA4-812B-DB39381F7250}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98B80D58-9083-4AA4-812B-DB39381F7250}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E544F8B0-F631-49B7-8EA4-037A0A977DA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E544F8B0-F631-49B7-8EA4-037A0A977DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E544F8B0-F631-49B7-8EA4-037A0A977DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E544F8B0-F631-49B7-8EA4-037A0A977DA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
