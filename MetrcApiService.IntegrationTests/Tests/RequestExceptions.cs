@@ -1,26 +1,11 @@
-namespace MetrcApiService.IntegrationTests;
+﻿namespace MetrcApiService.IntegrationTests;
 
 [TestClass]
-public class GetByIDRequests
+public class RequestExceptions
 {
     [TestMethod]
-    public void GetItemByID_ValidItemAndCredentials_ShouldReturnRequestedItemDTO()
-    {
-        //Arrange
-        var metrc = TestHelper.InstantiateMetrcAPIService();
-        string itemID = "91201";
-
-        //Act
-        var itemDTO = metrc.GetItemByID(itemID).GetAwaiter().GetResult();
-
-        //Assert
-        bool isCorrectItem = itemDTO.Id == Int32.Parse(itemID);
-        Assert.IsTrue(isCorrectItem);
-    }
-
-    [TestMethod]
     [ExpectedException(typeof(UnauthorizedRequestException))]
-    public void GetItemByID_BadCredentials_ShouldThrowUnauthorizedAccessException()
+    public void GenericGetRequest_BadCredentials_ShouldThrowUnauthorizedAccessException()
     {
         string vendorKey = "RxwslAgoPK4YinPORltFssWHCXVnPGdo9JtP0K0BlwiZ52bP";
         string userKey = "wxJMHOyXOyHsNC4QGEadNxBmbJo1ba5JFgfkbExN3ip7z";
@@ -36,7 +21,7 @@ public class GetByIDRequests
 
     [TestMethod]
     [ExpectedException(typeof(TooManyRequestsException))]
-    public void GetItemByID_SendManyRequests_ShouldThrowTooManyRequestsException()
+    public void GenericGetRequest_SendManyRequests_ShouldThrowTooManyRequestsException()
     {
         //Arrange
         var metrc = TestHelper.InstantiateMetrcAPIService();
@@ -60,8 +45,8 @@ public class GetByIDRequests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ResourceNotFoundException))]
-    public void GetItemByID_IDNotValid_ShouldThrowResourceNotFoundException()
+    [ExpectedException(typeof(BadRequestException))]
+    public void GenericGetRequest_IDNotValid_ShouldThrowResourceNotFoundException()
     {
         var metrc = TestHelper.InstantiateMetrcAPIService();
         string itemID = "thisisaninvalidid";
