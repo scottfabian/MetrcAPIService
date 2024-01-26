@@ -1,6 +1,6 @@
 ﻿namespace MetrcApiService.IntegrationTests;
 
-internal static class MetrcAPIServiceInstantiator
+internal static class TestHelper
 {
     public static MetrcAPIService.MetrcAPIService InstantiateMetrcAPIService()
     {

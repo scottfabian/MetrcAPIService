@@ -21,9 +21,9 @@ public class MetrcAPIService : ApiServiceBase
 
     #region GetRequests
 
-    public async Task<ItemDTO> GetItemByID(string id)
+    private async Task<T> GetEntityByID<T>(string id, string endpoint)
     {
-        var response = await SetEndpoint(MetrcEndpoints.GetItemByID)
+        var response = await SetEndpoint(endpoint)
                                 .InjectQueryParameter("id", id)
                                 .AddFacilityLicense(facilityLicense)
                                 .GetAsync();
@@ -33,7 +33,24 @@ public class MetrcAPIService : ApiServiceBase
             ThrowMetrcException(response);
         }
 
-        return ParseAndReturnDTO<ItemDTO>(response);
+        return ParseAndReturnDTO<T>(response);
+    }
+
+    public async Task<ItemDTO> GetItemByID(string id)
+    {
+        return await GetEntityByID<ItemDTO>(id, MetrcEndpoints.GetItemByID);
+
+        //var response = await SetEndpoint(MetrcEndpoints.GetItemByID)
+        //                        .InjectQueryParameter("id", id)
+        //                        .AddFacilityLicense(facilityLicense)
+        //                        .GetAsync();
+
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    ThrowMetrcException(response);
+        //}
+
+        //return ParseAndReturnDTO<ItemDTO>(response);
     }
 
     public async Task<PackageDTO> GetPackageByID(string id)
@@ -42,6 +59,11 @@ public class MetrcAPIService : ApiServiceBase
                                 .InjectQueryParameter("id", id)
                                 .AddFacilityLicense(facilityLicense)
                                 .GetAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ThrowMetrcException(response);
+        }
 
         return ParseAndReturnDTO<PackageDTO>(response);
     }
@@ -79,6 +101,8 @@ public class MetrcAPIService : ApiServiceBase
 
         switch (responseCode)
         {
+            case 400:
+                throw new BadRequestException(response.StatusCode, content);
             case 401:
                 throw new UnauthorizedRequestException(response.StatusCode, content);
             case 403:

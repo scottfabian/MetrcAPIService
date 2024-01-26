@@ -17,11 +17,21 @@ internal class Program
         string facilityLicense = "AU-G-EX-000001";
         var httpClient = new HttpClient();
 
-        string itemID = "91201";
+        string itemID = "test";
 
         var metrc = new MetrcAPIService.MetrcAPIService(baseUrl, httpClient, vendorKey, userKey, facilityLicense);
 
-        var item = metrc.GetItemByID(itemID);
+        
+
+        try
+        {
+            var item = metrc.GetItemByID(itemID).GetAwaiter().GetResult();
+        }
+        catch (BadRequestException ex)
+        {
+            await Console.Out.WriteLineAsync(ex.Response);
+        }
+        
 
     }
 }

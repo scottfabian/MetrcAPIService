@@ -15,9 +15,9 @@ public class MetrcApiException : Exception
     public MetrcApiException(string message, Exception ex) : base(message, ex) { }
 
 
-    public MetrcApiException(HttpStatusCode statusCode, string response) : base() { }
+    public MetrcApiException(HttpStatusCode statusCode, string response) : base() { this.StatusCode = statusCode; this.Response = response; }
 
-    public MetrcApiException(string message, HttpStatusCode statusCode, string response) : base(message) { }
+    public MetrcApiException(string message, HttpStatusCode statusCode, string response) : base(message) { this.StatusCode = statusCode; this.Response = response; }
 
-    public MetrcApiException(string message, Exception ex, HttpStatusCode statusCode, string response) : base(message, ex) { }
+    public MetrcApiException(string message, Exception ex, HttpStatusCode statusCode, string response) : base(message, ex) { this.StatusCode = statusCode; this.Response = response; }
 }
