@@ -39,33 +39,11 @@ public class MetrcAPIService : ApiServiceBase
     public async Task<ItemDTO> GetItemByID(string id)
     {
         return await GetEntityByID<ItemDTO>(id, MetrcEndpoints.GetItemByID);
-
-        //var response = await SetEndpoint(MetrcEndpoints.GetItemByID)
-        //                        .InjectQueryParameter("id", id)
-        //                        .AddFacilityLicense(facilityLicense)
-        //                        .GetAsync();
-
-        //if (!response.IsSuccessStatusCode)
-        //{
-        //    ThrowMetrcException(response);
-        //}
-
-        //return ParseAndReturnDTO<ItemDTO>(response);
     }
 
     public async Task<PackageDTO> GetPackageByID(string id)
     {
-        var response = await SetEndpoint(MetrcEndpoints.GetPackageByID)
-                                .InjectQueryParameter("id", id)
-                                .AddFacilityLicense(facilityLicense)
-                                .GetAsync();
-
-        if (!response.IsSuccessStatusCode)
-        {
-            ThrowMetrcException(response);
-        }
-
-        return ParseAndReturnDTO<PackageDTO>(response);
+        return await GetEntityByID<PackageDTO>(id, MetrcEndpoints.GetPackageByID);
     }
 
     #endregion GetRequests
