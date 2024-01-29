@@ -9,6 +9,7 @@ public class MetrcAPIService : ApiServiceBase
     private string vendorApiKey;
     private string baseURL;
     public string facilityLicense;
+    private string dateRangeFormat;
 
 
     public MetrcAPIService(string baseUrl, HttpClient httpClient, string vendorApiKey, string userApiKey, string facilityLicense) : base(baseUrl, httpClient, vendorApiKey, userApiKey)
@@ -17,9 +18,12 @@ public class MetrcAPIService : ApiServiceBase
         this.vendorApiKey = vendorApiKey;
         this.userApiKey = userApiKey;
         this.facilityLicense = facilityLicense;
+        this.dateRangeFormat = "yyyy-MM-dd";
     }
 
     #region GetRequests
+
+    #region Generic
 
     private async Task<T> GetEntityByID<T>(string id, string endpoint)
     {
@@ -36,15 +40,78 @@ public class MetrcAPIService : ApiServiceBase
         return ParseAndReturnDTO<T>(response);
     }
 
+    private async Task<T> GetEntitiesByDate<T>(string endpoint, DateTime startDate, DateTime endDate, int pageNumber = 0)
+    {
+        ApiRequestBuilder request = SetEndpoint(endpoint);
+
+        if (!pageNumber.Equals(0))
+        {
+            request.AddQueryParameter("pageNumber", pageNumber.ToString());
+        }
+
+        //var response = await request.AddQueryParameter("lastModifiedStart", startDate.ToString(dateRangeFormat))
+        //                        .AddFacilityLicense(facilityLicense)
+        //                        .AddQueryParameter("lastModifiedEnd", endDate.ToString(dateRangeFormat))
+        //                        .GetAsync();
+
+        request.AddFacilityLicense(facilityLicense)
+                                .AddQueryParameter("lastModifiedStart", startDate.ToString(dateRangeFormat))                             
+                                .AddQueryParameter("lastModifiedEnd", endDate.ToString(dateRangeFormat));
+
+        var response = await request.GetAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ThrowMetrcException(response);
+            //will throw exception, no need for return
+        }
+
+        return ParseAndReturnDTO<T>(response);
+
+    }
+
+    #endregion Generic
+
+    #region Items
+
     public async Task<ItemDTO> GetItemByID(string id)
     {
         return await GetEntityByID<ItemDTO>(id, MetrcEndpoints.GetItemByID);
     }
 
+    #endregion Items
+
+    #region Packages
+
     public async Task<PackageDTO> GetPackageByID(string id)
     {
         return await GetEntityByID<PackageDTO>(id, MetrcEndpoints.GetPackageByID);
     }
+
+    public async Task<GetPackagesByDateDTO> GetActivePackages(DateTime startDate, DateTime endDate, int pageNumber = 0)
+    {
+        if (pageNumber > 0)
+        {
+            return await GetEntitiesByDate<GetPackagesByDateDTO>(MetrcEndpoints.GetActivePackages, startDate, endDate, pageNumber);
+        }
+
+        return await GetEntitiesByDate<GetPackagesByDateDTO>(MetrcEndpoints.GetActivePackages, startDate, endDate);
+    }
+
+    public async Task<GetPackagesByDateDTO> GetActivePackages(string startDate, string endDate, int pageNumber = 0)
+    {
+        DateTime startDateTime = Convert.ToDateTime(startDate);
+        DateTime endDateTime = Convert.ToDateTime(endDate);
+
+        if (pageNumber > 0)
+        {
+            return await GetEntitiesByDate<GetPackagesByDateDTO>(MetrcEndpoints.GetActivePackages, startDateTime, endDateTime, pageNumber);
+        }
+
+        return await GetEntitiesByDate<GetPackagesByDateDTO>(MetrcEndpoints.GetActivePackages, startDateTime, endDateTime);
+    }
+
+    #endregion Packages
 
     #endregion GetRequests
 
@@ -93,6 +160,8 @@ public class MetrcAPIService : ApiServiceBase
                 throw new TooManyRequestsException(response.StatusCode, content);
             case 500:
                 throw new InternalServerErrorException(response.StatusCode, content);
+            default:
+                throw new Exception($"Request returned failure http status code {responseCode.ToString()}, check Metrc documentation for information");
         }
     }
 
