@@ -72,7 +72,7 @@ public class MetrcAPI : ApiServiceBase
 
         if (!response.IsSuccessStatusCode)
         {
-            ThrowMetrcException(response);
+            ThrowMetrcException(response, request.FullRequestURI);
             //will throw exception, no need for return
         }
 
@@ -183,29 +183,18 @@ public class MetrcAPI : ApiServiceBase
 
     #region Utilities
 
+    //method is a little unnecessary, but helps uphold DRY
     private static T ParseAndReturnDTO<T>(HttpResponseMessage response)
     {
 
         string responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-        try
-        {
-            T dto = JsonSerializer.Deserialize<T>(responseContent, _jsonSerializerOptions);
-            return dto;
-        }
-        catch (MetrcApiException)
-        {
-            ThrowMetrcException(response);
-        }
-        catch
-        {
-            throw;
-        }
+        T dto = JsonSerializer.Deserialize<T>(responseContent, _jsonSerializerOptions);
+        return dto;
 
-        throw new MetrcApiException("Unknown error, check trace logs for details");
     }
 
-    private static void ThrowMetrcException(HttpResponseMessage response)
+    private static void ThrowMetrcException(HttpResponseMessage response, string requestURI)
     {
         int responseCode = (int)response.StatusCode;
         string content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
@@ -213,21 +202,21 @@ public class MetrcAPI : ApiServiceBase
         switch (responseCode)
         {
             case 400:
-                throw new BadRequestException(response.StatusCode, content);
+                throw new BadRequestException(response.StatusCode, content, requestURI);
             case 401:
-                throw new UnauthorizedRequestException(response.StatusCode, content);
+                throw new UnauthorizedRequestException(response.StatusCode, content, requestURI);
             case 403:
-                throw new ForbiddenRequestException(response.StatusCode, content);
+                throw new ForbiddenRequestException(response.StatusCode, content, requestURI);
             case 404:
-                throw new ResourceNotFoundException(response.StatusCode, content);
+                throw new ResourceNotFoundException(response.StatusCode, content, requestURI);
             case 413:
-                throw new ContentTooLargeException(response.StatusCode, content);
+                throw new ContentTooLargeException(response.StatusCode, content, requestURI);
             case 429:
-                throw new TooManyRequestsException(response.StatusCode, content);
+                throw new TooManyRequestsException(response.StatusCode, content, requestURI);
             case 500:
-                throw new InternalServerErrorException(response.StatusCode, content);
+                throw new InternalServerErrorException(response.StatusCode, content, requestURI);
             default:
-                throw new Exception($"Request returned failure http status code {responseCode.ToString()}, check Metrc documentation for information");
+                throw new MetrcApiException($"Request returned failure http status code {responseCode.ToString()}, check Metrc documentation for information");
         }
     }
 
