@@ -21,14 +21,14 @@ public class PackageDTO
     public string? ItemFromFacilityName { get; set; }
     public string? Note { get; set; }
     public string? PackagedDate { get; set; }
-    public object? ExpirationDate { get; set; }
-    public object? SellByDate { get; set; }
-    public object? UseByDate { get; set; }
+    public DateTime? ExpirationDate { get; set; }
+    public DateTime? SellByDate { get; set; }
+    public DateTime? UseByDate { get; set; }
     public string? InitialLabTestingState { get; set; }
     public string? LabTestingState { get; set; }
     public string? LabTestingStateDate { get; set; }
-    public object? LabTestResultExpirationDateTime { get; set; }
-    public object? LabTestingRecordedDate { get; set; }
+    public DateTime? LabTestResultExpirationDateTime { get; set; }
+    public DateTime? LabTestingRecordedDate { get; set; }
     public bool IsProductionBatch { get; set; }
     public string? ProductionBatchNumber { get; set; }
     public string? SourceProductionBatchNumbers { get; set; }
@@ -42,17 +42,17 @@ public class PackageDTO
     public bool IsProcessValidationTestingSample { get; set; }
     public bool ProductRequiresRemediation { get; set; }
     public bool ContainsRemediatedProduct { get; set; }
-    public object? RemediationDate { get; set; }
-    public object? ReceivedDateTime { get; set; }
-    public object? ReceivedFromManifestNumber { get; set; }
-    public object? ReceivedFromFacilityLicenseNumber { get; set; }
-    public object? ReceivedFromFacilityName { get; set; }
+    public DateTime? RemediationDate { get; set; }
+    public DateTime? ReceivedDateTime { get; set; }
+    public string? ReceivedFromManifestNumber { get; set; }
+    public string? ReceivedFromFacilityLicenseNumber { get; set; }
+    public string? ReceivedFromFacilityName { get; set; }
     public bool IsOnHold { get; set; }
-    public object? ArchivedDate { get; set; }
-    public object? FinishedDate { get; set; }
+    public DateTime? ArchivedDate { get; set; }
+    public DateTime? FinishedDate { get; set; }
     public bool IsOnTrip { get; set; }
     public bool IsOnRetailerDelivery { get; set; }
-    public object? PackageForProductDestruction { get; set; }
+    public string? PackageForProductDestruction { get; set; }
     public DateTime LastModified { get; set; }
     public ItemDTO? Item { get; set; }
 }
