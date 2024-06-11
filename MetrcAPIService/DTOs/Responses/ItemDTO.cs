@@ -17,9 +17,9 @@ public class ItemDTO
     public string? UnitOfMeasureName { get; set; }
     public string? ApprovalStatus { get; set; }
     public DateTime ApprovalStatusDateTime { get; set; }
-    public int StrainId { get; set; }
+    public int? StrainId { get; set; }
     public string? StrainName { get; set; }
-    public int ItemBrandId { get; set; }
+    public int? ItemBrandId { get; set; }
     public object? ItemBrandName { get; set; }
     public string? AdministrationMethod { get; set; }
     public object? UnitCbdPercent { get; set; }

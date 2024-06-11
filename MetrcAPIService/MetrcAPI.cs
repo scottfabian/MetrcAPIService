@@ -3,21 +3,29 @@ using System.Text.Json;
 
 namespace MetrcAPIService;
 
-public class MetrcAPIService : ApiServiceBase
+public class MetrcAPI : ApiServiceBase
 {
-    private string userApiKey;
-    private string vendorApiKey;
-    private string baseURL;
-    public string facilityLicense;
-    private string dateRangeFormat;
+    public              string?                 FacilityLicense;
+    private             string                  userApiKey;
+    private             string                  vendorApiKey;
+    private             string                  baseURL; 
+    private             string                  dateRangeFormat;
+    private static      JsonSerializerOptions   _jsonSerializerOptions = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
 
-
-    public MetrcAPIService(string baseUrl, HttpClient httpClient, string vendorApiKey, string userApiKey, string facilityLicense) : base(baseUrl, httpClient, vendorApiKey, userApiKey)
+    public MetrcAPI(string baseUrl, HttpClient httpClient, string vendorApiKey, string userApiKey) : base(baseUrl, httpClient, vendorApiKey, userApiKey)
     {
         this.baseURL = baseUrl;
         this.vendorApiKey = vendorApiKey;
         this.userApiKey = userApiKey;
-        this.facilityLicense = facilityLicense;
+        this.dateRangeFormat = "yyyy-MM-dd";
+    }
+
+    public MetrcAPI(string baseUrl, HttpClient httpClient, string vendorApiKey, string userApiKey, string facilityLicense) : base(baseUrl, httpClient, vendorApiKey, userApiKey)
+    {
+        this.baseURL = baseUrl;
+        this.vendorApiKey = vendorApiKey;
+        this.userApiKey = userApiKey;
+        this.FacilityLicense = facilityLicense;
         this.dateRangeFormat = "yyyy-MM-dd";
     }
 
@@ -29,7 +37,7 @@ public class MetrcAPIService : ApiServiceBase
     {
         var response = await SetEndpoint(endpoint)
                                 .InjectQueryParameter("id", id)
-                                .AddFacilityLicense(facilityLicense)
+                                .AddFacilityLicense(FacilityLicense)
                                 .GetAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -54,7 +62,7 @@ public class MetrcAPIService : ApiServiceBase
         //                        .AddQueryParameter("lastModifiedEnd", endDate.ToString(dateRangeFormat))
         //                        .GetAsync();
 
-        request.AddFacilityLicense(facilityLicense)
+        request.AddFacilityLicense(FacilityLicense)
                                 .AddQueryParameter("lastModifiedStart", startDate.ToString(dateRangeFormat))                             
                                 .AddQueryParameter("lastModifiedEnd", endDate.ToString(dateRangeFormat));
 
@@ -113,6 +121,35 @@ public class MetrcAPIService : ApiServiceBase
 
     #endregion Packages
 
+    #region Harvests
+
+
+    #endregion Harvests
+
+    #region TestResults
+
+
+    #endregion TestResults
+
+    #region Misc
+
+    public async Task<FacilityDTO[]> GetActiveFacilities()
+    {
+        var request = SetEndpoint(MetrcEndpoints.GetActiveFacilities);
+        var response = await request.GetAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ThrowMetrcException(response);
+        }
+
+        return ParseAndReturnDTO<FacilityDTO[]>(response);
+    }
+
+    #endregion Misc
+
+
+
     #endregion GetRequests
 
     #region Utilities
@@ -124,7 +161,7 @@ public class MetrcAPIService : ApiServiceBase
 
         try
         {
-            T dto = JsonSerializer.Deserialize<T>(responseContent);
+            T dto = JsonSerializer.Deserialize<T>(responseContent, _jsonSerializerOptions);
             return dto;
         }
         catch (MetrcApiException)

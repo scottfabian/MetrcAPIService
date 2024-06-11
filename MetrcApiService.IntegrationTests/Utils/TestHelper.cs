@@ -4,7 +4,7 @@ namespace MetrcApiService.IntegrationTests;
 
 internal static class TestHelper
 {
-    public static MetrcAPIService.MetrcAPIService InstantiateMetrcAPIService()
+    public static MetrcAPIService.MetrcAPI InstantiateMetrcAPIService()
     {
         string vendorKey = "RxwslAgoPK4YinPORltFssWHCXVnPGdo9JtP0K0BlwiZ52bP";
         string userKey = "wxJMHOyXOyHsNC4QGEadNxBmbJo1ba5JFgfkbExN3ip7tYwz";
@@ -12,7 +12,7 @@ internal static class TestHelper
         string facilityLicense = "AU-G-EX-000001";
         HttpClient httpClient = new HttpClient();
 
-        return new MetrcAPIService.MetrcAPIService(baseUrl, httpClient, vendorKey, userKey, facilityLicense);
+        return new MetrcAPIService.MetrcAPI(baseUrl, httpClient, vendorKey, userKey, facilityLicense);
     }
 
     public static bool AreObjectsEqual<T>(T obj1, T obj2)

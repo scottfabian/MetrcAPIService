@@ -14,7 +14,7 @@ public class RequestExceptions
         var httpClient = new HttpClient();
         string itemID = "91201";
 
-        var metrc = new MetrcAPIService.MetrcAPIService(baseUrl, httpClient, vendorKey, userKey, facilityLicense);
+        var metrc = new MetrcAPIService.MetrcAPI(baseUrl, httpClient, vendorKey, userKey, facilityLicense);
 
         var item = metrc.GetItemByID(itemID).GetAwaiter().GetResult();
     }
