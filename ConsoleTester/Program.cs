@@ -18,8 +18,8 @@ internal class Program
         string sandboxMichiganFacilityLicense = "AU-G-EX-000001";
         
         var httpClient = new HttpClient();
-        string startDate = "2021-01-01";
-        string endDate = "2021-01-02";
+        string startDate = "2024-01-01";
+        string endDate = "2024-01-02";
 
         DateTime dStart = DateTime.Parse(startDate);
         DateTime dEnd = DateTime.Parse(endDate);
@@ -28,14 +28,15 @@ internal class Program
 
         int dateDiff = (DateTime.Now - dStart).Days;
 
-        List<HarvestDTO> harvests = new();
+        List<PackageDTO> packages = new();
 
         for (int i = 0; i < dateDiff; i++)
         {
+
             try
             {
-                var retrieved = await metrc.GetActiveHarvests(dStart, dEnd);
-                harvests.AddRange(retrieved.Data);
+                var retrieved = await metrc.GetActivePackages(dStart, dEnd);
+                packages.AddRange(retrieved.Data);
             }
             catch (MetrcApiException e)
             {
@@ -45,14 +46,33 @@ internal class Program
                 await Task.Run(() => Console.WriteLine(e.Response));
                 await Task.Run(() => Console.WriteLine("--------------------"));
             }
-            catch { }
+            catch (Exception ex)
+            {
+                await Task.Run(() => Console.WriteLine("--------------------"));
+                await Task.Run(() => Console.WriteLine(ex.Message));
+                await Task.Run(() => Console.WriteLine("--------------------"));
+            }
 
             dStart = dStart.AddDays(1);
             dEnd = dEnd.AddDays(1);
 
         }
 
-        string jsonData = JsonSerializer.Serialize(harvests);
+        List<int> packageIDs = packages.Select(x => x.Id).ToList();
 
+        List<LabTestResultsDTO> results = new();
+        var packageResults = await metrc.GetLabResults(635524);
+
+        results.AddRange(packageResults.Data);
+        //List<LabTestResultsDTO> results = new();
+
+        //foreach (var packageID in packageIDs)
+        //{
+        //    var localResults = await metrc.GetLabResults(packageID);
+
+        //    results.AddRange(localResults.Data);
+        //}
+
+        string resultsJson = JsonSerializer.Serialize(results);
     }
 }

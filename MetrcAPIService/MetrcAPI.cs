@@ -152,10 +152,32 @@ public class MetrcAPI : ApiServiceBase
 
     #endregion Harvests
 
-    #region TestResults
+    #region LabTests
+
+    public async Task<GenericDataResponseDTO<LabTestResultsDTO>> GetLabResults(int packageID, int pageNumber = 0, int pageSize = 0)
+    {
+        var request = SetEndpoint(MetrcEndpoints.GetLabResults)
+                        .AddQueryParameter("packageId", packageID.ToString());
+
+        if (pageNumber != 0)
+        {
+            request.AddQueryParameter("pageNumber", pageNumber.ToString());
+        }
+
+        if (pageSize != 0)
+        {
+            request.AddQueryParameter("pageSize", pageSize.ToString());
+        }
+
+        request.AddFacilityLicense(this.FacilityLicense);
+
+        var response = await request.GetAsync();
 
 
-    #endregion TestResults
+        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestResultsDTO>>(response);
+    }
+
+    #endregion LabTests
 
     #region Misc
 

@@ -8,4 +8,5 @@ internal class MetrcEndpoints
     public const string GetActiveFacilities = "/facilities/v2";
     public const string GetHarvestByID = "/harvests/v2/{id}";
     public const string GetActiveHarvests = "/harvests/v2/active";
+    public const string GetLabResults = "/labtests/v2/results";
 }
