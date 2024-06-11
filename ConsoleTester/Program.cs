@@ -7,35 +7,43 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
-        string vendorKey = "eXlucI51ZFoquvNCJ23rHEgTZY6vJVu1LP0hHJe0ZVawO0Uq";
-        string userKey = "zJKm-Ox7u2XRwDZJtNT2d3lwTslorA8acVWDB5r2087TXOoF";
-        string baseUrl = "https://api-wv.metrc.com";
-        string facilityLicense = "G490006";
+        string westVirginiaVendorKey = "eXlucI51ZFoquvNCJ23rHEgTZY6vJVu1LP0hHJe0ZVawO0Uq";
+        string altSolWVUserKey = "zJKm-Ox7u2XRwDZJtNT2d3lwTslorA8acVWDB5r2087TXOoF";
+        string altSolWestVirginiaFacilityLicense = "G490006";
+        string westVirginiaProdBaseUrl = "https://api-wv.metrc.com";
+        string sandboxMichiganVendorKey = "RxwslAgoPK4YinPORltFssWHCXVnPGdo9JtP0K0BlwiZ52bP";
+        string sandboxMichiganUserKey = "wxJMHOyXOyHsNC4QGEadNxBmbJo1ba5JFgfkbExN3ip7tYwz";
+        string sandboxMichiganBaseUrl = "https://sandbox-api-mi.metrc.com";
+        string sandboxMichiganFacilityLicense = "AU-G-EX-000001";
+        
         var httpClient = new HttpClient();
-        string startDate = "2024-04-01";
-        string endDate = "2024-04-02";
-        string itemID = "test";
+        string startDate = "2021-01-01";
+        string endDate = "2021-01-02";
 
         DateTime dStart = DateTime.Parse(startDate);
         DateTime dEnd = DateTime.Parse(endDate);
 
-        var metrc = new MetrcAPIService.MetrcAPI(baseUrl, httpClient, vendorKey, userKey, facilityLicense);
+        var metrc = new MetrcAPIService.MetrcAPI(westVirginiaProdBaseUrl, httpClient, westVirginiaVendorKey, altSolWVUserKey, altSolWestVirginiaFacilityLicense);
 
         int dateDiff = (DateTime.Now - dStart).Days;
 
-        List<PackageDTO> packages = new();
+        List<HarvestDTO> harvests = new();
 
         for (int i = 0; i < dateDiff; i++)
         {
-            var retrieved = await metrc.GetActivePackages(dStart, dEnd);
-            packages.AddRange(retrieved.Data);
+            try
+            {
+                var retrieved = await metrc.GetActiveHarvests(dStart, dEnd);
+                harvests.AddRange(retrieved.Data);
+            }
+            catch { }
 
             dStart = dStart.AddDays(1);
             dEnd = dEnd.AddDays(1);
 
         }
 
-        string jsonData = JsonSerializer.Serialize(packages);
+        string jsonData = JsonSerializer.Serialize(harvests);
 
     }
 }

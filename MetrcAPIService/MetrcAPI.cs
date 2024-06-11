@@ -31,6 +31,8 @@ public class MetrcAPI : ApiServiceBase
 
     #region GetRequests
 
+
+
     #region Generic
 
     private async Task<T> GetEntityByID<T>(string id, string endpoint)
@@ -123,6 +125,33 @@ public class MetrcAPI : ApiServiceBase
 
     #region Harvests
 
+    public async Task<HarvestDTO> GetHarvestByID(string id)
+    {
+        return await GetEntityByID<HarvestDTO>(id, MetrcEndpoints.GetHarvestByID);
+    }
+
+    public async Task<GenericDataResponseDTO<HarvestDTO>> GetActiveHarvests(DateTime startDate, DateTime endDate, int pageNumber = 0)
+    {
+        if (pageNumber > 0)
+        {
+            return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDate, endDate, pageNumber);
+        }
+
+        return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDate, endDate);
+    }
+
+    public async Task<GenericDataResponseDTO<HarvestDTO>> GetActiveHarvests(string startDate, string endDate, int pageNumber = 0)
+    {
+        DateTime startDateTime = Convert.ToDateTime(startDate);
+        DateTime endDateTime = Convert.ToDateTime(endDate);
+
+        if (pageNumber > 0)
+        {
+            return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDateTime, endDateTime, pageNumber);
+        }
+
+        return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDateTime, endDateTime);
+    }
 
     #endregion Harvests
 
