@@ -1,5 +1,6 @@
 ﻿using MetrcAPIService;
 using System.Text.Json;
+using System.Threading.Channels;
 
 namespace ConsoleTester;
 
@@ -35,6 +36,14 @@ internal class Program
             {
                 var retrieved = await metrc.GetActiveHarvests(dStart, dEnd);
                 harvests.AddRange(retrieved.Data);
+            }
+            catch (MetrcApiException e)
+            {
+                await Task.Run(() => Console.WriteLine("--------------------"));
+                await Task.Run(() => Console.WriteLine(e.Message));
+                await Task.Run(() => Console.WriteLine(e.RequestURI));
+                await Task.Run(() => Console.WriteLine(e.Response));
+                await Task.Run(() => Console.WriteLine("--------------------"));
             }
             catch { }
 

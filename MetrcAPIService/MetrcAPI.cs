@@ -37,14 +37,16 @@ public class MetrcAPI : ApiServiceBase
 
     private async Task<T> GetEntityByID<T>(string id, string endpoint)
     {
-        var response = await SetEndpoint(endpoint)
-                                .InjectQueryParameter("id", id)
-                                .AddFacilityLicense(FacilityLicense)
-                                .GetAsync();
+        var request = SetEndpoint(endpoint)
+                         .InjectQueryParameter("id", id)
+                         .AddFacilityLicense(FacilityLicense);
+
+        var response = await request.GetAsync();
 
         if (!response.IsSuccessStatusCode)
         {
-            ThrowMetrcException(response);
+            ThrowMetrcException(response, request.FullRequestURI);
+            //will throw exception, no need for return
         }
 
         return ParseAndReturnDTO<T>(response);
@@ -58,11 +60,6 @@ public class MetrcAPI : ApiServiceBase
         {
             request.AddQueryParameter("pageNumber", pageNumber.ToString());
         }
-
-        //var response = await request.AddQueryParameter("lastModifiedStart", startDate.ToString(dateRangeFormat))
-        //                        .AddFacilityLicense(facilityLicense)
-        //                        .AddQueryParameter("lastModifiedEnd", endDate.ToString(dateRangeFormat))
-        //                        .GetAsync();
 
         request.AddFacilityLicense(FacilityLicense)
                                 .AddQueryParameter("lastModifiedStart", startDate.ToString(dateRangeFormat))                             
@@ -169,7 +166,7 @@ public class MetrcAPI : ApiServiceBase
 
         if (!response.IsSuccessStatusCode)
         {
-            ThrowMetrcException(response);
+            ThrowMetrcException(response, request.FullRequestURI);
         }
 
         return ParseAndReturnDTO<FacilityDTO[]>(response);
