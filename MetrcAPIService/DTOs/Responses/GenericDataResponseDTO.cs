@@ -1,8 +1,8 @@
 ﻿namespace MetrcAPIService;
 
-public class GetPackagesByDateDTO
+public class GenericDataResponseDTO<T>
 {
-    public PackageDTO[]?    Data                { get; set; }
+    public T[]?             Data                { get; set; }
     public int              Total               { get; set; }
     public int              TotalRecords        { get; set; }
     public int              PageSize            { get; set; }
