@@ -9,4 +9,5 @@ internal class MetrcEndpoints
     public const string GetHarvestByID = "/harvests/v2/{id}";
     public const string GetActiveHarvests = "/harvests/v2/active";
     public const string GetLabResults = "/labtests/v2/results";
+    public const string GetLabTestBatches = "/labtests/v2/batches";
 }

@@ -1,4 +1,5 @@
 ﻿using MetrcAPIService;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Channels;
 
@@ -18,8 +19,8 @@ internal class Program
         string sandboxMichiganFacilityLicense = "AU-G-EX-000001";
         
         var httpClient = new HttpClient();
-        string startDate = "2024-01-01";
-        string endDate = "2024-01-02";
+        string startDate = "2024-06-01";
+        string endDate = "2024-06-02";
 
         DateTime dStart = DateTime.Parse(startDate);
         DateTime dEnd = DateTime.Parse(endDate);
@@ -27,6 +28,11 @@ internal class Program
         var metrc = new MetrcAPIService.MetrcAPI(westVirginiaProdBaseUrl, httpClient, westVirginiaVendorKey, altSolWVUserKey, altSolWestVirginiaFacilityLicense);
 
         int dateDiff = (DateTime.Now - dStart).Days;
+
+
+        var testBatchesResponseObj = await metrc.GetLabTestBatches();
+
+        var testBatches = testBatchesResponseObj.Data;
 
         List<PackageDTO> packages = new();
 
@@ -60,7 +66,7 @@ internal class Program
 
         List<int> packageIDs = packages.Select(x => x.Id).ToList();
 
-        List<LabTestResultsDTO> results = new();
+        List<LabTestResultDTO> results = new();
         var packageResults = await metrc.GetLabResults(635524);
 
         results.AddRange(packageResults.Data);

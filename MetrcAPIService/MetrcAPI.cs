@@ -154,6 +154,15 @@ public class MetrcAPI : ApiServiceBase
 
     #region LabTests
 
+    public async Task<GenericDataResponseDTO<LabTestBatchDTO>> GetLabTestBatches()
+    {
+        var request = SetEndpoint(MetrcEndpoints.GetLabTestBatches);
+
+        var response = await request.GetAsync();
+
+        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestBatchDTO>>(response);
+    }
+
     public async Task<GenericDataResponseDTO<LabTestResultDTO>> GetLabResults(int packageID, int pageNumber = 0, int pageSize = 0)
     {
         var request = SetEndpoint(MetrcEndpoints.GetLabResults)

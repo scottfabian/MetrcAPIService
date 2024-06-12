@@ -14,11 +14,11 @@ public class LabTestResultDTO
     public DateTime? RevokedDate { get; set; }
     public int? LabTestResultDocumentFileId { get; set; }
     public bool ResultReleased { get; set; }
-    public DateTime ResultReleaseDateTime { get; set; }
+    public DateTime? ResultReleaseDateTime { get; set; }
     public DateTime? ExpirationDateTime { get; set; }
     public string TestTypeName { get; set; }
     public bool TestPassed { get; set; }
-    public float TestResultLevel { get; set; }
+    public double TestResultLevel { get; set; }
     public string TestComment { get; set; }
     public bool TestInformationalOnly { get; set; }
     public DateTime? LabTestDetailRevokedDate { get; set; }

@@ -1,0 +1,16 @@
+﻿namespace MetrcAPIService;
+
+public class LabTestTypeDTO
+{
+    public int? Id { get; set; }
+    public string? Name { get; set; }
+    public bool RequiresTestResult { get; set; }
+    public bool InformationalOnly { get; set; }
+    public bool AlwaysPasses { get; set; }
+    public int? MaxAllowedFailureCount { get; set; }
+    public string LabTestResultMode { get; set; }
+    public double? LabTestResultMinimum { get; set; }
+    public double? LabTestResultMaximum { get; set; }
+    public int? LabTestResultExpirationDays { get; set; }
+    public string? DependencyMode { get; set; }
+}
