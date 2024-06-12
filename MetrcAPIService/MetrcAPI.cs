@@ -43,13 +43,7 @@ public class MetrcAPI : ApiServiceBase
 
         var response = await request.GetAsync();
 
-        if (!response.IsSuccessStatusCode)
-        {
-            ThrowMetrcException(response, request.FullRequestURI);
-            //will throw exception, no need for return
-        }
-
-        return ParseAndReturnDTO<T>(response);
+        return ParseAndReturnDTO<T>(response, request);
     }
 
     private async Task<T> GetEntitiesByDate<T>(string endpoint, DateTime startDate, DateTime endDate, int pageNumber = 0)
@@ -67,13 +61,7 @@ public class MetrcAPI : ApiServiceBase
 
         var response = await request.GetAsync();
 
-        if (!response.IsSuccessStatusCode)
-        {
-            ThrowMetrcException(response, request.FullRequestURI);
-            //will throw exception, no need for return
-        }
-
-        return ParseAndReturnDTO<T>(response);
+        return ParseAndReturnDTO<T>(response, request);
 
     }
 
@@ -160,7 +148,7 @@ public class MetrcAPI : ApiServiceBase
 
         var response = await request.GetAsync();
 
-        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestBatchDTO>>(response);
+        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestBatchDTO>>(response, request);
     }
 
     public async Task<GenericDataResponseDTO<LabTestResultDTO>> GetLabResults(int packageID, int pageNumber = 0, int pageSize = 0)
@@ -183,7 +171,7 @@ public class MetrcAPI : ApiServiceBase
         var response = await request.GetAsync();
 
 
-        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestResultDTO>>(response);
+        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestResultDTO>>(response, request);
     }
 
     #endregion LabTests
@@ -200,7 +188,7 @@ public class MetrcAPI : ApiServiceBase
             ThrowMetrcException(response, request.FullRequestURI);
         }
 
-        return ParseAndReturnDTO<FacilityDTO[]>(response);
+        return ParseAndReturnDTO<FacilityDTO[]>(response, request);
     }
 
     #endregion Misc
@@ -211,15 +199,17 @@ public class MetrcAPI : ApiServiceBase
 
     #region Utilities
 
-    //method is a little unnecessary, but helps uphold DRY
-    private static T ParseAndReturnDTO<T>(HttpResponseMessage response)
+    private static T ParseAndReturnDTO<T>(HttpResponseMessage response, ApiRequestBuilder request)
     {
+        if (!response.IsSuccessStatusCode)
+        {
+            ThrowMetrcException(response, request.FullRequestURI);
+        }
 
         string responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
         T dto = JsonSerializer.Deserialize<T>(responseContent, _jsonSerializerOptions);
         return dto;
-
     }
 
     private static void ThrowMetrcException(HttpResponseMessage response, string requestURI)
