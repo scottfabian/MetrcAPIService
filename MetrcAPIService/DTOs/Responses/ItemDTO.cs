@@ -1,6 +1,6 @@
 ﻿namespace MetrcAPIService;
 
-public class ItemDTO
+public class ItemDTO : IMetrcDTO
 {
     public int Id { get; set; }
     public string? Name { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace MetrcAPIService;
 
-public class LabTestBatchDTO
+public class LabTestBatchDTO : IMetrcDTO
 {
     public string Name { get; set; }
     public int LabTestTypeCount { get; set; }

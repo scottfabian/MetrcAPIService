@@ -1,14 +1,14 @@
 ﻿namespace MetrcAPIService;
 
-public class FacilityTypeDTO
+public class FacilityTypeDTO : IMetrcDTO
 {
     public bool IsMedical { get; set; }
     public bool IsRetail { get; set; }
     public bool IsHemp { get; set; }
     public int? RestrictHarvestPlantRestoreTimeHours { get; set; }
-    public object TotalMemberPatientsAllowed { get; set; }
-    public object RestrictWholesalePriceEditDays { get; set; }
-    public object RestrictPlantBatchAdjustmentTimeHours { get; set; }
+    public int? TotalMemberPatientsAllowed { get; set; }
+    public int? RestrictWholesalePriceEditDays { get; set; }
+    public int? RestrictPlantBatchAdjustmentTimeHours { get; set; }
     public bool CanGrowPlants { get; set; }
     public bool CanCreateOpeningBalancePlantBatches { get; set; }
     public bool CanClonePlantBatches { get; set; }

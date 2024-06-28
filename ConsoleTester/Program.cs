@@ -30,6 +30,7 @@ internal class Program
         int dateDiff = (DateTime.Now - dStart).Days;
 
 
+
         var testBatchesResponseObj = await metrc.GetLabTestBatches();
 
         var testBatches = testBatchesResponseObj.Data;
@@ -67,7 +68,7 @@ internal class Program
         List<int> packageIDs = packages.Select(x => x.Id).ToList();
 
         List<LabTestResultDTO> results = new();
-        var packageResults = await metrc.GetLabResults(635524);
+        var packageResults = await metrc.GetLabResultsForPackage(635524);
 
         results.AddRange(packageResults.Data);
         //List<LabTestResultsDTO> results = new();
@@ -79,6 +80,54 @@ internal class Program
         //    results.AddRange(localResults.Data);
         //}
 
-        string resultsJson = JsonSerializer.Serialize(results);
+        HashSet<string> batchTypes = new();
+
+        foreach (var batch in testBatches)
+        {
+            string testBatchName = batch.Name;
+
+            if (testBatchName.Contains("retest", StringComparison.OrdinalIgnoreCase))
+            {
+                batchTypes.Add(testBatchName);
+                continue;
+            }
+
+            if (testBatchName.Contains("R&D Testing"))
+            {
+                if (!testBatchName.Contains('('))
+                {
+                    int startIndex = testBatchName.IndexOf('-');
+                    string batchType = testBatchName.Substring(startIndex + 2);
+                    batchTypes.Add(batchType.Trim());
+                    continue;
+                }
+
+                int hyphenIndex = testBatchName.IndexOf('-');
+                int parenIndex = testBatchName.IndexOf('(');
+
+                string newName = testBatchName.Substring(hyphenIndex + 2, parenIndex - (hyphenIndex + 1) - 1);
+                batchTypes.Add(newName.Trim());
+                continue;
+            }
+
+
+            if (testBatchName.Contains('(') && testBatchName.Contains(')'))
+            {
+                int startIndex = testBatchName.IndexOf('(');
+                int endIndex = testBatchName.IndexOf(')');
+
+                string batchType = testBatchName.Substring(startIndex + 1, endIndex - startIndex - 1);
+
+                batchTypes.Add(batchType.Trim());
+                continue;
+            }
+
+
+            batchTypes.Add(testBatchName);
+
+        }
+
+        batchTypes = batchTypes.OrderBy(x => x).ToHashSet();
+
     }
 }

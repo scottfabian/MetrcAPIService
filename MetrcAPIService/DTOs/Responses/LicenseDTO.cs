@@ -1,6 +1,6 @@
 ﻿namespace MetrcAPIService;
 
-public class LicenseDTO
+public class LicenseDTO : IMetrcDTO
 {
     public string Number { get; set; }
     public string StartDate { get; set; }

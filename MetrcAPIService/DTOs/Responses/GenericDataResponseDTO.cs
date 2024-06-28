@@ -1,6 +1,6 @@
 ﻿namespace MetrcAPIService;
 
-public class GenericDataResponseDTO<T>
+public class GenericDataResponseDTO<T> : IMetrcDTO
 {
     public T[]?             Data                { get; set; }
     public int              Total               { get; set; }

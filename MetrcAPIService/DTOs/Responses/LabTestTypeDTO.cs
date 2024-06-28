@@ -1,8 +1,8 @@
 ﻿namespace MetrcAPIService;
 
-public class LabTestTypeDTO
+public class LabTestTypeDTO : IMetrcDTO
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
     public string? Name { get; set; }
     public bool RequiresTestResult { get; set; }
     public bool InformationalOnly { get; set; }

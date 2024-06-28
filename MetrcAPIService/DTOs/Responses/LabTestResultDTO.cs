@@ -1,6 +1,6 @@
 ﻿namespace MetrcAPIService;
 
-public class LabTestResultDTO
+public class LabTestResultDTO : IMetrcDTO
 {
     public int PackageId { get; set; }
     public int LabTestResultId { get; set; }

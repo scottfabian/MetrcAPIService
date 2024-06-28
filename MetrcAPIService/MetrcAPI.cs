@@ -32,7 +32,6 @@ public class MetrcAPI : ApiServiceBase
     #region GetRequests
 
 
-
     #region Generic
 
     private async Task<T> GetEntityByID<T>(string id, string endpoint)
@@ -46,11 +45,11 @@ public class MetrcAPI : ApiServiceBase
         return ParseAndReturnDTO<T>(response, request);
     }
 
-    private async Task<T> GetEntitiesByDate<T>(string endpoint, DateTime startDate, DateTime endDate, int pageNumber = 0)
+    private async Task<T> GetEntitiesByDate<T>(string endpoint, DateTime startDate, DateTime endDate, int pageNumber = 1)
     {
         ApiRequestBuilder request = SetEndpoint(endpoint);
 
-        if (!pageNumber.Equals(0))
+        if (!pageNumber.Equals(1))
         {
             request.AddQueryParameter("pageNumber", pageNumber.ToString());
         }
@@ -74,6 +73,22 @@ public class MetrcAPI : ApiServiceBase
         return await GetEntityByID<ItemDTO>(id, MetrcEndpoints.GetItemByID);
     }
 
+    public async Task<GenericDataResponseDTO<ItemDTO>> GetActiveItems(int pageNumber = 1)
+    {
+        ApiRequestBuilder request = SetEndpoint(MetrcEndpoints.GetActiveItems)
+                                        .AddFacilityLicense(FacilityLicense);
+
+        if (!pageNumber.Equals(1))
+        {
+            request.AddQueryParameter("pageNumber", pageNumber.ToString());
+        }
+
+        var response = await request.GetAsync();
+
+        return ParseAndReturnDTO<GenericDataResponseDTO<ItemDTO>>(response, request);
+
+    }
+
     #endregion Items
 
     #region Packages
@@ -83,9 +98,9 @@ public class MetrcAPI : ApiServiceBase
         return await GetEntityByID<PackageDTO>(id, MetrcEndpoints.GetPackageByID);
     }
 
-    public async Task<GenericDataResponseDTO<PackageDTO>> GetActivePackages(DateTime startDate, DateTime endDate, int pageNumber = 0)
+    public async Task<GenericDataResponseDTO<PackageDTO>> GetActivePackages(DateTime startDate, DateTime endDate, int pageNumber = 1)
     {
-        if (pageNumber > 0)
+        if (pageNumber > 1)
         {
             return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDate, endDate, pageNumber);
         }
@@ -93,12 +108,12 @@ public class MetrcAPI : ApiServiceBase
         return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDate, endDate);
     }
 
-    public async Task<GenericDataResponseDTO<PackageDTO>> GetActivePackages(string startDate, string endDate, int pageNumber = 0)
+    public async Task<GenericDataResponseDTO<PackageDTO>> GetActivePackages(string startDate, string endDate, int pageNumber = 1)
     {
         DateTime startDateTime = Convert.ToDateTime(startDate);
         DateTime endDateTime = Convert.ToDateTime(endDate);
 
-        if (pageNumber > 0)
+        if (pageNumber > 1)
         {
             return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDateTime, endDateTime, pageNumber);
         }
@@ -115,9 +130,9 @@ public class MetrcAPI : ApiServiceBase
         return await GetEntityByID<HarvestDTO>(id, MetrcEndpoints.GetHarvestByID);
     }
 
-    public async Task<GenericDataResponseDTO<HarvestDTO>> GetActiveHarvests(DateTime startDate, DateTime endDate, int pageNumber = 0)
+    public async Task<GenericDataResponseDTO<HarvestDTO>> GetActiveHarvests(DateTime startDate, DateTime endDate, int pageNumber = 1)
     {
-        if (pageNumber > 0)
+        if (pageNumber > 1)
         {
             return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDate, endDate, pageNumber);
         }
@@ -125,12 +140,12 @@ public class MetrcAPI : ApiServiceBase
         return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDate, endDate);
     }
 
-    public async Task<GenericDataResponseDTO<HarvestDTO>> GetActiveHarvests(string startDate, string endDate, int pageNumber = 0)
+    public async Task<GenericDataResponseDTO<HarvestDTO>> GetActiveHarvests(string startDate, string endDate, int pageNumber = 1)
     {
         DateTime startDateTime = Convert.ToDateTime(startDate);
         DateTime endDateTime = Convert.ToDateTime(endDate);
 
-        if (pageNumber > 0)
+        if (pageNumber > 1)
         {
             return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDateTime, endDateTime, pageNumber);
         }
@@ -151,7 +166,17 @@ public class MetrcAPI : ApiServiceBase
         return ParseAndReturnDTO<GenericDataResponseDTO<LabTestBatchDTO>>(response, request);
     }
 
-    public async Task<GenericDataResponseDTO<LabTestResultDTO>> GetLabResults(int packageID, int pageNumber = 0, int pageSize = 0)
+    public async Task<GenericDataResponseDTO<LabTestTypeDTO>> GetLabTestTypes(int pageNumber = 1)
+    {
+        var request = SetEndpoint(MetrcEndpoints.GetLabTestTypes)
+                            .AddQueryParameter("pageNumber", pageNumber.ToString());
+
+        var response = await request.GetAsync();
+
+        return ParseAndReturnDTO<GenericDataResponseDTO<LabTestTypeDTO>>(response, request);
+    }
+
+    public async Task<GenericDataResponseDTO<LabTestResultDTO>> GetLabResultsForPackage(int packageID, int pageNumber = 0)
     {
         var request = SetEndpoint(MetrcEndpoints.GetLabResults)
                         .AddQueryParameter("packageId", packageID.ToString());
@@ -161,10 +186,6 @@ public class MetrcAPI : ApiServiceBase
             request.AddQueryParameter("pageNumber", pageNumber.ToString());
         }
 
-        if (pageSize != 0)
-        {
-            request.AddQueryParameter("pageSize", pageSize.ToString());
-        }
 
         request.AddFacilityLicense(this.FacilityLicense);
 
@@ -175,6 +196,31 @@ public class MetrcAPI : ApiServiceBase
     }
 
     #endregion LabTests
+
+    #region Strains
+
+    public async Task<StrainDTO> GetStrainByID(string id)
+    {
+        return await GetEntityByID<StrainDTO>(id, MetrcEndpoints.GetStrainByID);
+    }
+
+    public async Task<GenericDataResponseDTO<StrainDTO>> GetActiveStrains(int pageNumber = 1)
+    {
+        ApiRequestBuilder request = SetEndpoint(MetrcEndpoints.GetActiveStrains)
+                                        .AddFacilityLicense(FacilityLicense);
+
+        if (!pageNumber.Equals(1))
+        {
+            request.AddQueryParameter("pageNumber", pageNumber.ToString());
+        }
+
+        var response = await request.GetAsync();
+
+        return ParseAndReturnDTO<GenericDataResponseDTO<StrainDTO>>(response, request);
+    }
+
+    #endregion Strains
+
 
     #region Misc
 
