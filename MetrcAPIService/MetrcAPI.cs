@@ -89,6 +89,21 @@ public class MetrcAPI : ApiServiceBase
 
     }
 
+    public async Task<GenericDataResponseDTO<ItemDTO>> GetInactiveItems(int pageNumber = 1)
+    {
+        ApiRequestBuilder request = SetEndpoint(MetrcEndpoints.GetInactiveItems)
+                                        .AddFacilityLicense(FacilityLicense);
+
+        if (!pageNumber.Equals(1))
+        {
+            request.AddQueryParameter("pageNumber", pageNumber.ToString());
+        }
+
+        var response = await request.GetAsync();
+
+        return ParseAndReturnDTO<GenericDataResponseDTO<ItemDTO>>(response, request);
+    }
+
     #endregion Items
 
     #region Packages
@@ -106,7 +121,7 @@ public class MetrcAPI : ApiServiceBase
         }
 
         return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDate, endDate);
-    }
+    } 
 
     public async Task<GenericDataResponseDTO<PackageDTO>> GetActivePackages(string startDate, string endDate, int pageNumber = 1)
     {
@@ -120,6 +135,25 @@ public class MetrcAPI : ApiServiceBase
 
         return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDateTime, endDateTime);
     }
+
+    public async Task<GenericDataResponseDTO<PackageDTO>> GetInactivePackages(DateTime startDate, DateTime endEndDate, int pageNumber = 1)
+    {
+        return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetInactivePackages, startDate, endEndDate, pageNumber);
+    }
+
+    public async Task<GenericDataResponseDTO<PackageDTO>> GetInactivePackages(string startDate, string endDate, int pageNumber = 1)
+    {
+        DateTime startDateTime = Convert.ToDateTime(startDate);
+        DateTime endDateTime = Convert.ToDateTime(endDate);
+
+        if (pageNumber > 1)
+        {
+            return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDateTime, endDateTime, pageNumber);
+        }
+
+        return await GetEntitiesByDate<GenericDataResponseDTO<PackageDTO>>(MetrcEndpoints.GetActivePackages, startDateTime, endDateTime);
+    }
+
 
     #endregion Packages
 
@@ -151,6 +185,11 @@ public class MetrcAPI : ApiServiceBase
         }
 
         return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetActiveHarvests, startDateTime, endDateTime);
+    }
+
+    public async Task<GenericDataResponseDTO<HarvestDTO>> GetInactiveHarvests(DateTime startDate, DateTime endDate, int pageNumber = 1)
+    {
+        return await GetEntitiesByDate<GenericDataResponseDTO<HarvestDTO>>(MetrcEndpoints.GetInactiveHarvests, startDate, endDate);
     }
 
     #endregion Harvests
