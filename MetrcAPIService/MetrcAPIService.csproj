@@ -13,9 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="FabToolKit">
-      <HintPath>..\..\..\My Libraries\FabToolKit\FabToolKit\bin\Release\net8.0\publish\FabToolKit.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\My Libraries\FabToolKit\FabToolKit\FabToolKit.csproj" />
   </ItemGroup>
 
 </Project>
